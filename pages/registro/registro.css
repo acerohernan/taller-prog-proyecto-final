@@ -1,0 +1,41 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F8F9FA;
+}
+
+.logo {
+    display: block;
+    width: 85px;
+    height: 85px;
+    margin: 100px auto 0;
+}
+
+.title {
+    font-size: 40px;
+    margin-bottom: 16px;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 412px;
+    height: 100dvh;
+    position: relative;
+}
+
+.form-container {
+    display: grid;
+    gap: 24px;
+    padding: 24px;
+}
+
+.copyrigth {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin: 24px 0px;
+    opacity: 0.6;
+}
