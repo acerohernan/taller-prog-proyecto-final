@@ -1,0 +1,182 @@
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { auth } from "../common/firebase.js";
+import { getEntradasByUser } from "../common/firestore.js";
+import "../common/private-route.js";
+import "../common/components/index.js";
+import "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";
+
+const loadingMessage = document.getElementById("loading-message");
+const entradasTable = document.getElementById("entradas-table");
+const entradasAddButton = document.getElementById("entradas-add-button");
+const entradasDownloadButton = document.getElementById(
+  "entradas-download-button"
+);
+
+let currentEntradas = [];
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+
+  loadingMessage.style.display = "flex";
+
+  getEntradasByUser(user.uid)
+    .then(getEntradasCallback)
+    .finally(() => {
+      loadingMessage.style.display = "none";
+    });
+});
+
+entradasDownloadButton.addEventListener("click", () => {
+  downloadEntradasExcel(currentEntradas);
+});
+
+function getEntradasCallback(entradas) {
+  if (entradas.length === 0) {
+    const noEntradasMessage = document.createElement("div");
+    noEntradasMessage.className =
+      "d-flex flex-column align-items-center justify-content-center h-50";
+    noEntradasMessage.innerHTML = `
+      <p class="fs-4">No hay entradas registradas.</p> 
+      <p class="text-muted">Haz clic en el botón "+" para registrar nuevas entradas.</p>
+    `;
+    loadingMessage.replaceWith(noEntradasMessage);
+    entradasAddButton.disabled = false;
+    return;
+  }
+
+  entradas = entradas.sort((a, b) => {
+    const dateA = a.date
+      ? a.date.toDate
+        ? a.date.toDate()
+        : new Date(a.date)
+      : new Date(0);
+    const dateB = b.date
+      ? b.date.toDate
+        ? b.date.toDate()
+        : new Date(b.date)
+      : new Date(0);
+    return dateA - dateB;
+  });
+
+  // Guardar las entradas para usar en la descarga
+  currentEntradas = entradas;
+
+  const tbody = document.querySelector("#entradas-table tbody");
+  tbody.innerHTML = "";
+
+  entradas.forEach((salida) => {
+    const row = document.createElement("tr");
+
+    // Parsear los detalles si es una cadena JSON
+    let detallesTexto = "-";
+    try {
+      const detalles =
+        typeof salida.details === "string"
+          ? JSON.parse(salida.details)
+          : salida.details;
+
+      if (Array.isArray(detalles)) {
+        detallesTexto = detalles
+          .map((item) => `- ${item.quantity} de <i>${item.product}</i>`)
+          .join("<br>");
+      }
+    } catch (e) {
+      detallesTexto = salida.details || "-";
+    }
+
+    // Formatear la fecha
+    let fechaTexto = "-";
+    if (salida.date) {
+      const fecha = salida.date.toDate
+        ? salida.date.toDate()
+        : new Date(salida.date);
+      fechaTexto = fecha.toLocaleDateString("es-ES");
+    }
+
+    // Formatear la hora
+    let horaTexto = "-";
+    if (salida.date) {
+      const fecha = salida.date.toDate
+        ? salida.date.toDate()
+        : new Date(salida.date);
+      horaTexto = fecha.toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    }
+
+    row.innerHTML = `
+      <td>${fechaTexto}</td>
+      <td>${horaTexto}</td>
+      <td>$${salida.amount || "0"}</td>
+      <td style="white-space: pre-wrap; min-width: 200px; word-wrap: break-word; overflow-wrap: break-word;">${detallesTexto}</td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  entradasTable.style.display = "block";
+  entradasAddButton.disabled = false;
+  entradasDownloadButton.disabled = false;
+}
+
+function downloadEntradasExcel(entradas) {
+  // Preparar los datos para el Excel
+  const dataToExport = entradas.map((salida) => {
+    // Parsear los detalles
+    let detallesTexto = "-";
+    try {
+      const detalles =
+        typeof salida.details === "string"
+          ? JSON.parse(salida.details)
+          : salida.details;
+
+      if (Array.isArray(detalles)) {
+        detallesTexto = detalles
+          .map((item) => `${item.quantity} de ${item.product}`)
+          .join(", ");
+      }
+    } catch (e) {
+      detallesTexto = salida.details || "-";
+    }
+
+    // Formatear la fecha
+    let fechaTexto = "-";
+    if (salida.date) {
+      const fecha = salida.date.toDate
+        ? salida.date.toDate()
+        : new Date(salida.date);
+      fechaTexto = fecha.toLocaleDateString("es-ES");
+    }
+
+    // Formatear la hora para Excel
+    let horaTexto = "-";
+    if (salida.date) {
+      const fecha = salida.date.toDate
+        ? salida.date.toDate()
+        : new Date(salida.date);
+      horaTexto = fecha.toLocaleTimeString("es-ES", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    }
+
+    return {
+      Fecha: fechaTexto,
+      Hora: horaTexto,
+      Monto: salida.amount,
+      Detalles: detallesTexto,
+    };
+  });
+
+  // Crear un nuevo workbook
+  const ws = XLSX.utils.json_to_sheet(dataToExport);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Entradas");
+
+  // Generar el archivo y descargarlo
+  const now = new Date();
+  const timestamp = now.toISOString().split("T")[0]; // YYYY-MM-DD
+  XLSX.writeFile(wb, `entradas_${timestamp}.xlsx`);
+}
