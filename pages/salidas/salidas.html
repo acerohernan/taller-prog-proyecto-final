@@ -37,7 +37,7 @@
             class="btn btn-primary d-flex align-items-center gap-2"
             disabled
             id="salidas-add-button"
-            href="./agregar.html"
+            href="#"
           >
             <i class="bi bi-plus fs-5"></i>
             <span class="d-none d-md-inline">Crear salida</span>
@@ -81,6 +81,58 @@
         </div>
       </main>
       <!-- Main content -->
+    </div>
+
+    <!-- Modal: choose manual or scanner -->
+    <div
+      class="modal fade"
+      id="create-salida-modal"
+      tabindex="-1"
+      aria-labelledby="createSalidaModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createSalidaModalLabel">
+              Crear salida
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>¿Deseas crear una salida manual o usar el escáner?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              id="btn-cancel-modal"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="btn-salida-manual"
+            >
+              Salida Manual
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="btn-salida-scanner"
+            >
+              Usar Scanner
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Bootstrap Javascript -->

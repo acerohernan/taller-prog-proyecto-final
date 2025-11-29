@@ -8,6 +8,7 @@ import {
 } from "../common/firestore.js";
 import "../common/private-route.js";
 import "../common/components/index.js";
+import { showToast } from "../common/utils/toast.js";
 
 const loadingMessage = document.getElementById("loading-message");
 const productsListContainer = document.getElementById(
@@ -46,7 +47,7 @@ guardarButton.addEventListener("click", async (e) => {
   e.preventDefault();
 
   if (!currentUser) {
-    alert("No hay usuario autenticado");
+    showToast("No hay usuario autenticado", "danger");
     return;
   }
 
@@ -56,7 +57,10 @@ guardarButton.addEventListener("click", async (e) => {
   );
 
   if (productsWithQuantity.length === 0) {
-    alert("Por favor selecciona al menos un producto con cantidad mayor a 0");
+    showToast(
+      "Por favor selecciona al menos un producto con cantidad mayor a 0",
+      "warning"
+    );
     return;
   }
 
@@ -82,13 +86,13 @@ guardarButton.addEventListener("click", async (e) => {
     // Incrementar estadística de entradas
     await incrementStatistic(currentUser.uid, "totalEntradas");
 
-    alert("Entrada guardada exitosamente");
+    showToast("Entrada guardada exitosamente", "success");
 
     // Redirigir a entradas
     window.location.href = "./entradas.html";
   } catch (error) {
     console.error("Error al guardar la entrada:", error);
-    alert("Error al guardar la entrada: " + error.message);
+    showToast("Error al guardar la entrada: " + error.message, "danger");
   } finally {
     guardarButton.disabled = false;
     guardarButton.innerHTML = "Guardar";

@@ -3,6 +3,7 @@ import "../common/components/index.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { auth } from "../common/firebase.js";
 import { getOrCreateStatistics } from "../common/firestore.js";
+import { showToast } from "../common/utils/toast.js";
 
 const totalProductsElement = document.getElementById("total-products");
 const totalSalidasElement = document.getElementById("total-salidas");
@@ -13,6 +14,8 @@ const statisticsCards = document.getElementById("statistics-cards");
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) return;
+
+  showToast("Cargando estadísticas...", "info");
 
   // show loader
   if (loadingMessage) loadingMessage.style.display = "flex";

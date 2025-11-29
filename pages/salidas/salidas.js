@@ -30,6 +30,34 @@ salidasDownloadButton.addEventListener("click", () => {
   downloadSalidasExcel(currentSalidas);
 });
 
+// Modal behaviour for adding a salida (manual vs scanner)
+const createSalidaModalEl = document.getElementById("create-salida-modal");
+let createModal = null;
+if (createSalidaModalEl) {
+  createModal = new bootstrap.Modal(createSalidaModalEl);
+}
+
+// Show modal when clicking the add button
+if (salidasAddButton) {
+  salidasAddButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (createModal) createModal.show();
+  });
+}
+
+const btnSalidaManual = document.getElementById("btn-salida-manual");
+const btnSalidaScanner = document.getElementById("btn-salida-scanner");
+if (btnSalidaManual) {
+  btnSalidaManual.addEventListener("click", () => {
+    window.location.href = "./agregar.html";
+  });
+}
+if (btnSalidaScanner) {
+  btnSalidaScanner.addEventListener("click", () => {
+    window.location.href = "./scanner.html";
+  });
+}
+
 function getSalidasCallback(salidas) {
   if (salidas.length === 0) {
     const noSalidasMessage = document.createElement("div");

@@ -12,6 +12,13 @@ const entradasDownloadButton = document.getElementById(
   "entradas-download-button"
 );
 
+// Modal behaviour for adding a entrada (manual vs scanner)
+const createEntradaModalEl = document.getElementById("create-entrada-modal");
+let createEntradaModal = null;
+if (createEntradaModalEl) {
+  createEntradaModal = new bootstrap.Modal(createEntradaModalEl);
+}
+
 let currentEntradas = [];
 
 onAuthStateChanged(auth, async (user) => {
@@ -29,6 +36,27 @@ onAuthStateChanged(auth, async (user) => {
 entradasDownloadButton.addEventListener("click", () => {
   downloadEntradasExcel(currentEntradas);
 });
+
+// Show modal when clicking the add button
+if (entradasAddButton) {
+  entradasAddButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (createEntradaModal) createEntradaModal.show();
+  });
+}
+
+const btnEntradaManual = document.getElementById("btn-entrada-manual");
+const btnEntradaScanner = document.getElementById("btn-entrada-scanner");
+if (btnEntradaManual) {
+  btnEntradaManual.addEventListener("click", () => {
+    window.location.href = "./agregar.html";
+  });
+}
+if (btnEntradaScanner) {
+  btnEntradaScanner.addEventListener("click", () => {
+    window.location.href = "./scanner.html";
+  });
+}
 
 function getEntradasCallback(entradas) {
   if (entradas.length === 0) {

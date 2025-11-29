@@ -66,6 +66,7 @@
                 <th scope="col">Código</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Cantidad</th>
+                <th scope="col">Código de Barras</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -92,5 +93,47 @@
 
     <!-- Custom script -->
     <script src="productos.js" type="module"></script>
+
+    <!-- Modal for viewing barcode -->
+    <div
+      class="modal fade"
+      id="barcode-modal"
+      tabindex="-1"
+      aria-labelledby="barcodeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="barcodeModalLabel">Código de barras</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <div id="barcode-viewer"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="barcode-download-modal"
+            >
+              Descargar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

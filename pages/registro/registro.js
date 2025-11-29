@@ -1,5 +1,6 @@
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { auth } from "../common/firebase.js";
+import { showToast } from "../common/utils/toast.js";
 
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
@@ -25,7 +26,7 @@ registroButton.addEventListener("click", (e) => {
 
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      alert("Registro exitoso. Ahora puedes iniciar sesión.");
+      showToast("Registro exitoso. Ahora puedes iniciar sesión.", "success");
 
       window.location.href = "../login/login.html";
     })

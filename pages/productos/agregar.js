@@ -1,6 +1,7 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { auth } from "../common/firebase.js";
 import { saveProduct, incrementStatistic } from "../common/firestore.js";
+import { showToast } from "../common/utils/toast.js";
 import "../common/private-route.js";
 import "../common/components/index.js";
 
@@ -21,12 +22,12 @@ saveButton.addEventListener("click", async (e) => {
   e.preventDefault();
 
   if (!currentUser) {
-    alert("No hay usuario autenticado");
+    showToast("No hay usuario autenticado", "danger");
     return;
   }
 
   if (!productForm.checkValidity()) {
-    alert("Por favor completa todos los campos requeridos");
+    showToast("Por favor completa todos los campos requeridos", "warning");
     productForm.classList.add("was-validated");
     return;
   }
@@ -49,7 +50,7 @@ saveButton.addEventListener("click", async (e) => {
     // Incrementar estadística de productos
     await incrementStatistic(currentUser.uid, "totalProducts");
 
-    alert("Producto guardado exitosamente");
+    showToast("Producto guardado exitosamente", "success");
 
     // Limpiar formulario
     productForm.reset();
@@ -58,7 +59,7 @@ saveButton.addEventListener("click", async (e) => {
     window.location.href = "./productos.html";
   } catch (error) {
     console.error("Error al guardar el producto:", error);
-    alert("Error al guardar el producto: " + error.message);
+    showToast("Error al guardar el producto: " + error.message, "danger");
   } finally {
     saveButton.disabled = false;
     saveButton.innerHTML = "Guardar";
