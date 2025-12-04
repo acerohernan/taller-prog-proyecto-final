@@ -27,6 +27,9 @@ class SidebarMenu extends HTMLElement {
               class="nav-link py-3 border-bottom d-flex align-items-center justify-content-center justify-content-md-start px-3"
               id="nav-link-inicio"
               data-section="inicio"
+              data-bs-toggle="tooltip" 
+              data-bs-placement="right" 
+              title="Contiene las estadísticas generales del inventario."
             >
               <i class="bi bi-house-door fs-4"></i>
               <span class="ms-2 d-none d-md-inline">Inicio</span>
@@ -38,20 +41,12 @@ class SidebarMenu extends HTMLElement {
               class="nav-link py-3 border-bottom d-flex align-items-center justify-content-center justify-content-md-start px-3"
               id="nav-link-products"
               data-section="productos"
+              data-bs-toggle="tooltip" 
+              data-bs-placement="right" 
+              title="Contiene los productos registrados y permite registrar nuevos."
             >
               <i class="bi bi-grid fs-4"></i>
               <span class="ms-2 d-none d-md-inline">Productos</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              href="/pages/salidas/salidas.html"
-              class="nav-link py-3 border-bottom d-flex align-items-center justify-content-center justify-content-md-start px-3"
-              id="nav-link-salidas"
-              data-section="salidas"
-            >
-              <i class="bi bi-box-arrow-left fs-4"></i>
-              <span class="ms-2 d-none d-md-inline">Salidas</span>
             </a>
           </li>
           <li class="nav-item">
@@ -60,11 +55,29 @@ class SidebarMenu extends HTMLElement {
               class="nav-link py-3 border-bottom d-flex align-items-center justify-content-center justify-content-md-start px-3"
               id="nav-link-entradas"
               data-section="entradas"
+              data-bs-toggle="tooltip" 
+              data-bs-placement="right" 
+              title="Contiene las entradas registradas y permite crear nuevas."
             >
               <i class="bi bi-box-arrow-right fs-4"></i>
               <span class="ms-2 d-none d-md-inline">Entradas</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a
+              href="/pages/salidas/salidas.html"
+              class="nav-link py-3 border-bottom d-flex align-items-center justify-content-center justify-content-md-start px-3"
+              id="nav-link-salidas"
+              data-section="salidas"
+              data-bs-toggle="tooltip" 
+              data-bs-placement="right" 
+              title="Contiene las salidas registradas y permite crear nuevas."
+            >
+              <i class="bi bi-box-arrow-left fs-4"></i>
+              <span class="ms-2 d-none d-md-inline">Salidas</span>
+            </a>
+          </li>
+          
         </ul>
         <div class="dropdown border-top">
           <a
@@ -104,9 +117,17 @@ class SidebarMenu extends HTMLElement {
       const section = link.dataset.section;
       // Verifica si la ruta contiene la carpeta
       if (currentPath.includes(`/pages/${section}/`)) {
-        link.classList.add("active"); // aplicar estilo sombreado
+        if (section === "salidas") {
+          link.classList.add("active-salidas");
+        } else if (section === "entradas") {
+          link.classList.add("active-entradas");
+        } else {
+          link.classList.add("active");
+        }
       } else {
         link.classList.remove("active");
+        link.classList.remove("active-salidas");
+        link.classList.remove("active-entradas");
       }
     });
 

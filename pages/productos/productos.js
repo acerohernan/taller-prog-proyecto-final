@@ -5,6 +5,7 @@ import "../common/private-route.js";
 import "../common/components/index.js";
 import "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";
 import "https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js";
+import { activateTooltips } from "../common/components/tooltip.js";
 
 const loadingMessage = document.getElementById("loading-message");
 const productsTable = document.getElementById("products-table");
@@ -63,14 +64,18 @@ function getProductsCallback(products) {
           <button
             class="btn btn-sm btn-outline-primary rounded-circle view-barcode"
             ${product.code ? `data-code="${product.code}"` : "disabled"}
-            title="Ver código de barras"
             style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;"
+            data-bs-toggle="tooltip" 
+            data-bs-placement="bottom" 
+            title="Ver código de barras"
           >
             <i class="bi bi-eye"></i>
           </button>
           <button
             class="btn btn-sm btn-outline-success rounded-circle download-barcode"
             ${product.code ? `data-code="${product.code}"` : "disabled"}
+            data-bs-toggle="tooltip" 
+            data-bs-placement="bottom" 
             title="Descargar código de barras"
             style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;"
           >
@@ -80,6 +85,7 @@ function getProductsCallback(products) {
       </td>
     `;
     tbody.appendChild(row);
+    activateTooltips();
   });
 
   productsTable.style.display = "block";

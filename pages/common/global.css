@@ -21,6 +21,7 @@ body {
     width: 100%;
     height: 100dvh;
     position: relative;
+    border: 1px solid red;
 }
 
 .dashboard-container {
@@ -48,6 +49,16 @@ body {
 
 .nav-link.active {
     fill: white;
+}
+
+.nav-link.active-salidas {
+    background-color: red !important;
+    color: white;
+}
+
+.nav-link.active-entradas {
+    background-color: rgb(113, 177, 17) !important;
+    color: white;
 }
 
 .dashboard-sidebar-logo {
